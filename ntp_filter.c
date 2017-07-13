@@ -115,8 +115,7 @@ nf_filter(struct ocx *ocx, const struct ntp_peer *np)
 	}
 
 	// This is almost never a good sign.
-	if (r > 2048) {
-		/* XXX: 2048 -> param */
+	if (r > param_ntp_filter_ancient) {
 		Put(ocx, OCX_TRACE, "NF ancient ref %.3e\n", r);
 		return;
 	}

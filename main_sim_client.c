@@ -139,7 +139,7 @@ simfile_readline(struct ocx *ocx, struct todolist *tdl, void *priv)
 			u1 -= sf->t0;
 			TS_Nanosec(&sf->when, u1, u2);
 			dt = TS_Diff(&sf->when, &t0);
-			if (dt >= 1e-3) {
+			if (dt >= param_sim_min_sched) {
 				TODO_ScheduleAbs(tdl, simfile_readline, priv,
 				    &sf->when, 0.0, "Readline");
 				return (TODO_OK);

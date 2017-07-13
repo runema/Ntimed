@@ -38,8 +38,10 @@
 /* name, min, max, default, docs */
 
 #ifdef PARAM_CLIENT
-PARAM_CLIENT(poll_rate, 16.0,	4096.0,	64.0, "")
-PARAM_CLIENT(foo, 16.0,	4096.0,	64.0, "")
+PARAM_CLIENT(poll_rate, 16.0,	4096.0,	64.0, "Client poll rate")
+PARAM_CLIENT(sim_min_sched,
+	1e-6, 1e-2, 1e-3,
+	"Minimum delay before simulator scheduling")
 #endif
 
 #ifdef PARAM_NTP_FILTER
@@ -58,6 +60,14 @@ PARAM_NTP_FILTER(ntp_filter_threshold,
 	"Packet delays exceeding the average by this factor are untrustworthy."
 	"  Setting this too high increases noise from (mild) congestion."
 	"  Setting it too low throws away adequate timestamps."
+)
+
+PARAM_NTP_FILTER(ntp_filter_ancient,
+	256, 4096, 2048,
+	"Packet delays exceeding the average by this amount are too old."
+	" Theese events are logged."
+	"  Setting this too high and the clock man become eratic."
+	"  Setting it too low throws away useful timestamps."
 )
 
 #endif
@@ -107,6 +117,32 @@ PARAM_PLL_STD(pll_std_p_limit,
 	"Reducing this will make the PLL more resistent to noise,"
 	" but going too far it will not be able to steer the clock fast enough."
 	"  Increasing this makes the PLL more agile and prone to noise."
+)
+
+PARAM_PLL_STD(pll_std_mode1_step,
+	1e-6, 3e2, 1e-3,
+	"Treshold for stepping clock at startup.\n\n"
+	"Reducing this will step the clock at smaller errors."
+	" Increasing this makes the PLL more tolerant and"
+	" reduce the chance that the clock is stepped."
+)
+
+PARAM_PLL_STD(pll_std_mode1_rt,
+	1e-3, 1e3, 2,
+	"Cut off value for internal offset in PLL-mode 1\n\n"
+	"Increasing this will delay the initial clock step."
+)
+
+PARAM_PLL_STD(pll_std_mode1_weight,
+	1e-3, 1e3, 3,
+	"Cut off value for weight in PLL-mode 1\n\n"
+	"Increasing this will delay the initial clock step."
+)
+
+PARAM_PLL_STD(pll_std_mode2_rt,
+	1e-3, 1e3, 6,
+	"Cut off value for internal offset in PLL-mode 2\n\n"
+	"Increasing this will delay the transition to mode 3."
 )
 
 #endif

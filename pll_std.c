@@ -77,8 +77,9 @@ pll_std(struct ocx *ocx, double offset, double weight)
 	case 1: /* Wait until we have a good estimate, then step */
 
 		rt = TS_Diff(&t0, &pll_t0);
-		if (rt > 2.0 && weight > 3) {		// XXX param
-			if (fabs(offset) > 1e-3)	// XXX param
+		if (rt > param_pll_std_mode1_rt
+		   && weight > param_pll_std_mode1_weight) {
+			if (fabs(offset) > param_pll_std_mode1_step)
 				TB_Step(ocx, -offset);
 			pll_mode = 2;
 			pll_t0 = t0;
@@ -88,7 +89,7 @@ pll_std(struct ocx *ocx, double offset, double weight)
 	case 2: /* Wait for another good estimate, then PLL */
 
 		rt = TS_Diff(&t0, &pll_t0);
-		if (rt > 6.0) {
+		if (rt > param_pll_std_mode2_rt) {
 			pll_b = pll_a / param_pll_std_i_init;
 			pll_t0 = t0;
 			pll_mode = 3;
