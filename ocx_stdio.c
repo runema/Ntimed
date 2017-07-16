@@ -82,7 +82,7 @@ getdst(enum ocx_chan chan)
 	NEEDLESS_RETURN(NULL);
 }
 
-static void __match_proto__()
+void __match_proto__()
 putv(struct ocx *ocx, enum ocx_chan chan, const char *fmt, va_list ap)
 {
 	FILE *dst = getdst(chan);
@@ -124,50 +124,3 @@ ArgTracefile(const char *fn)
 	setbuf(tracefile, NULL);
 }
 
-/**********************************************************************
- * XXX: The stuff below is generic and really ought to be in ocx.c on
- * XXX: its own.
- */
-
-void
-Put(struct ocx *ocx, enum ocx_chan chan, const char *fmt, ...)
-{
-	va_list ap;
-
-	AZ(ocx);
-	va_start(ap, fmt);
-	putv(ocx, chan, fmt, ap);
-	va_end(ap);
-}
-
-void
-PutHex(struct ocx *ocx, enum ocx_chan chan, const void *ptr, ssize_t len)
-{
-	const uint8_t *p = ptr;
-	const char *s = "";
-
-	AN(ptr);
-	assert(len >= 0);
-
-	while(len--) {
-		Put(ocx, chan, "%s%02x", s, *p++);
-		s = " ";
-	}
-}
-
-void
-Fail(struct ocx *ocx, int err, const char *fmt, ...)
-{
-	va_list ap;
-
-	if (err)
-		err = errno;
-	Put(ocx, OCX_DIAG, "Failure: ");
-	va_start(ap, fmt);
-	putv(ocx, OCX_DIAG, fmt, ap);
-	va_end(ap);
-	Put(ocx, OCX_DIAG, "\n");
-	if (err)
-		Put(ocx, OCX_DIAG, "errno = %d (%s)\n", err, strerror(err));
-	exit(1);
-}

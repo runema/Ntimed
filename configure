@@ -64,6 +64,7 @@ SRCS='
 	ntp_peer.c
 	ntp_peerset.c
 	ntp_tools.c
+	ocx.c
 	ocx_stdio.c
 	param.c
 	pll_std.c

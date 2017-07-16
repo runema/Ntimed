@@ -32,6 +32,7 @@
 #endif
 #define NTIMED_H_INCLUDED
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <unistd.h>
 #include "ntimed_queue.h"
@@ -64,6 +65,9 @@ void Fail(struct ocx *, int err, const char *, ...) \
 #define Debug(ocx, ...)		Put(ocx, OCX_DEBUG, __VA_ARGS__)
 #define DebugHex(ocx, ptr, len)	PutHex(ocx, OCX_DEBUG, ptr, len)
 
+/* ocx_stdio */
+void __match_proto__()
+putv(struct ocx *ocx, enum ocx_chan chan, const char *fmt, va_list ap);
 void ArgTracefile(const char *fn);
 
 /* param.c -- Parameters **********************************************/
