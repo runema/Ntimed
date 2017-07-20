@@ -65,8 +65,8 @@ PARAM_NTP_FILTER(ntp_filter_threshold,
 PARAM_NTP_FILTER(ntp_filter_ancient,
 	256, 4096, 2048,
 	"Packet delays exceeding the average by this amount are too old."
-	" Theese events are logged."
-	"  Setting this too high and the clock man become eratic."
+	" These events are logged."
+	"  Setting this too high and the clock may become erratic."
 	"  Setting it too low throws away useful timestamps."
 )
 
@@ -124,7 +124,7 @@ PARAM_PLL_STD(pll_std_mode1_step,
 	"Treshold for stepping clock at startup.\n\n"
 	"Reducing this will step the clock at smaller errors."
 	" Increasing this makes the PLL more tolerant and"
-	" reduce the chance that the clock is stepped."
+	" reduces the chance that the clock is stepped."
 )
 
 PARAM_PLL_STD(pll_std_mode1_rt,
