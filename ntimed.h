@@ -93,6 +93,12 @@ void PLL_Init(void);
 
 int SA_Equal(const void *sa1, size_t sl1, const void *sa2, size_t sl2);
 
+/* sys_*.c */
+
+typedef void sb_background_f(struct ocx*);
+extern sb_background_f *SB_Background;
+void Background_Unix_Init(void);
+
 /* time_sim.c -- Simulated timebase ***********************************/
 
 extern double Time_Sim_delta;

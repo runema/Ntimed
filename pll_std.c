@@ -92,6 +92,13 @@ pll_std(struct ocx *ocx, double offset, double weight)
 			pll_b = pll_a / param_pll_std_i_init;
 			pll_t0 = t0;
 			pll_mode = 3;
+			/*
+			 * Put process in the background if the client
+			 * configured that.
+			 */
+			if (SB_Background != NULL) {
+				SB_Background(ocx);
+			}
 		}
 		break;
 
@@ -133,6 +140,7 @@ pll_std(struct ocx *ocx, double offset, double weight)
 		p_term = -offset * used_a;
 		pll_integrator += p_term * used_b;
 		dur = dt;
+
 		break;
 	default:
 		WRONG("Wrong PLL state");

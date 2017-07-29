@@ -71,6 +71,7 @@ main_client(int argc, char *const *argv)
 
 	tdl = TODO_NewList();
 	Time_Unix(tdl);
+	Background_Unix_Init();
 
 	PLL_Init();
 

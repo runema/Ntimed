@@ -68,6 +68,7 @@ SRCS='
 	param.c
 	pll_std.c
 	suckaddr.c
+	sys_unix.c
 	time_sim.c
 	time_stuff.c
 	time_unix.c
