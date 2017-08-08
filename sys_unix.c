@@ -33,12 +33,18 @@
 
 sb_background_f *SB_Background = NULL;
 
+static int bg = 0;
+
 static void __match_proto__(sb_background_f)
 unix_background(struct ocx *ocx)
 {
+	AZ(bg);
+
 	if (daemon(1, 1)) {
 		Fail(ocx, errno, "daemon() failed\n");
 	}
+
+	bg++;
 	Debug(ocx, "BACKGROUND\n");
 }
 
