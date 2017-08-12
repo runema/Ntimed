@@ -57,18 +57,36 @@ main_run_tests(int argc, char * const * argv)
 	return (0);
 }
 
+static void
+usage(struct ocx *ocx, const char *pgm)
+{
+        Put(ocx, OCX_DIAG,"Usage: %s [--help|--poll-server|--sim-client|--run-tests] ...\n", pgm);
+        Put(ocx, OCX_DIAG, "\t--help\t\tShow this help\n");
+        Put(ocx, OCX_DIAG, "\t--poll-server\tPoll servers and collect simulator input\n");
+        Put(ocx, OCX_DIAG, "\t--sim-client\tRun simulator\n");
+        Put(ocx, OCX_DIAG, "\t--run-tests\tRun testcases\n");
+        Put(ocx, OCX_DIAG, "\n");
+        Put(ocx, OCX_DIAG, "Without one of these options, the normal client is run.\n");
+}
+
 int
 main(int argc, char * const *argv)
 {
 	if (getpid() == 0)
 		dummy();
 
-	if (argc > 1 && !strcmp(argv[1], "--poll-server"))
-		return (main_poll_server(argc - 1, argv + 1));
-	if (argc > 1 && !strcmp(argv[1], "--sim-client"))
-		return (main_sim_client(argc - 1, argv + 1));
-	if (argc > 1 && !strcmp(argv[1], "--run-tests"))
-		return (main_run_tests(argc - 1, argv + 1));
+	if (argc > 1) {
+		if (!strcmp(argv[1], "--poll-server"))
+			return (main_poll_server(argc - 1, argv + 1));
+		if (!strcmp(argv[1], "--sim-client"))
+			return (main_sim_client(argc - 1, argv + 1));
+		if (!strcmp(argv[1], "--run-tests"))
+			return (main_run_tests(argc - 1, argv + 1));
+		if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
+			usage(NULL, argv[0]);
+			return 0;
+		}
+	}
 
 	return (main_client(argc, argv));
 }
