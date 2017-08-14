@@ -101,9 +101,6 @@ Stop ntpd if it is running, and then::
 
 That should synchronize your clock to those servers.
 
-Because this is a preview release, the process will not "daemonize"
-into the background.
-
 The '-t /tmp/somefile' arguments tells it to write a full blow-by-blow
 tracefile, for analysis and debugging.
 
@@ -114,8 +111,8 @@ What happens when you run it ?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After a few seconds, your clock will be stepped if necessary.
-(In the final version, this is where the process daemonizes into the
-background -- from which point you can trust your clock to be good.)
+Then the program will get into the background you can trust
+your clock to be good.
 
 In the next 30-60 seconds, the PLL will eliminate any residual phase
 error and from this point in time, your computer's clock should be
