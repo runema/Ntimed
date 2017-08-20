@@ -83,7 +83,7 @@ mps_end(struct ocx *ocx, struct todolist *tdl, void *priv)
 }
 
 int
-main_poll_server(int argc, char *const *argv)
+main_poll_server(struct ocx *ocx, int argc, char *const *argv)
 {
 	int ch;
 	int npeer = 0;
@@ -97,12 +97,12 @@ main_poll_server(int argc, char *const *argv)
 	setbuf(stdout, NULL);
 	setbuf(stderr, NULL);
 
-	ArgTracefile("-");
+	ArgTracefile(ocx, "-");
 
 	tdl = TODO_NewList();
 	Time_Unix_Passive();
 
-	npl = NTP_PeerSet_New(NULL);
+	npl = NTP_PeerSet_New(ocx);
 	AN(npl);
 
 	while ((ch = getopt(argc, argv, "d:m:t:")) != -1) {
@@ -110,18 +110,18 @@ main_poll_server(int argc, char *const *argv)
 		case 'd':
 			duration = strtod(optarg, &p);
 			if (*p != '\0' || duration < 1.0)
-				Fail(NULL, 0, "Invalid -d argument");
+				Fail(ocx, 0, "Invalid -d argument");
 			break;
 		case 'm':
-			mon = NTP_Peer_NewLookup(NULL, optarg);
+			mon = NTP_Peer_NewLookup(ocx, optarg);
 			if (mon == NULL)
-				Fail(NULL, 0, "Monitor (-m) didn't resolve.");
+				Fail(ocx, 0, "Monitor (-m) didn't resolve.");
 			break;
 		case 't':
-			ArgTracefile(optarg);
+			ArgTracefile(ocx, optarg);
 			break;
 		default:
-			Fail(NULL, 0,
+			Fail(ocx, 0,
 			    "Usage %s [-d duration] [-m monitor] "
 			    "[-t tracefile] server...", argv[0]);
 			break;
@@ -131,22 +131,22 @@ main_poll_server(int argc, char *const *argv)
 	argv += optind;
 
 	for (ch = 0; ch < argc; ch++)
-		npeer += NTP_PeerSet_Add(NULL, npl, argv[ch]);
-	Put(NULL, OCX_TRACE, "# NTIMED Format poll-server 1.0\n");
-	Put(NULL, OCX_TRACE, "# Found %d peers\n", npeer);
+		npeer += NTP_PeerSet_Add(ocx, npl, argv[ch]);
+	Put(ocx, OCX_TRACE, "# NTIMED Format poll-server 1.0\n");
+	Put(ocx, OCX_TRACE, "# Found %d peers\n", npeer);
 	if (npeer == 0)
-		Fail(NULL, 0, "No peers found");
+		Fail(ocx, 0, "No peers found");
 
 	NTP_PeerSet_Foreach(np, npl) {
-		Put(NULL, OCX_TRACE, "# Peer %s %s\n", np->hostname, np->ip);
+		Put(ocx, OCX_TRACE, "# Peer %s %s\n", np->hostname, np->ip);
 		np->filter_func = mps_filter;
 	}
 
 	if (mon != NULL)
-		Put(NULL, OCX_TRACE,
+		Put(ocx, OCX_TRACE,
 		    "# Monitor %s %s\n", mon->hostname, mon->ip);
 
-	usc = UdpTimedSocket(NULL);
+	usc = UdpTimedSocket(ocx);
 	assert(usc != NULL);
 
 	TODO_ScheduleRel(tdl, mps_end, NULL, duration, 0, "End task");
@@ -154,7 +154,7 @@ main_poll_server(int argc, char *const *argv)
 	if (mon != NULL)
 		TODO_ScheduleRel(tdl, mps_mon, mon, 0, 32, "Monitor");
 
-	NTP_PeerSet_Poll(NULL, npl, usc, tdl);
-	(void)TODO_Run(NULL, tdl);
+	NTP_PeerSet_Poll(ocx, npl, usc, tdl);
+	(void)TODO_Run(ocx, tdl);
 	return (0);
 }

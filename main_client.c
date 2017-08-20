@@ -56,7 +56,7 @@ sig_hup(int siginfo)
 }
 
 int
-main_client(int argc, char *const *argv)
+main_client(struct ocx *ocx, int argc, char *const *argv)
 {
 	int ch;
 	struct ntp_peer *np;
@@ -74,7 +74,7 @@ main_client(int argc, char *const *argv)
 
 	PLL_Init();
 
-	nps = NTP_PeerSet_New(NULL);
+	nps = NTP_PeerSet_New(ocx);
 
 	Param_Register(client_param_table);
 	NF_Init();
@@ -82,13 +82,13 @@ main_client(int argc, char *const *argv)
 	while ((ch = getopt(argc, argv, "p:t:")) != -1) {
 		switch(ch) {
 		case 'p':
-			Param_Tweak(NULL, optarg);
+			Param_Tweak(ocx, optarg);
 			break;
 		case 't':
-			ArgTracefile(optarg);
+			ArgTracefile(ocx, optarg);
 			break;
 		default:
-			Fail(NULL, 0,
+			Fail(ocx, 0,
 			    "Usage %s [-p param] [-t tracefile] servers...",
 			    argv[0]);
 			break;
@@ -98,18 +98,18 @@ main_client(int argc, char *const *argv)
 	argv += optind;
 
 	for (ch = 0; ch < argc; ch++)
-		npeer += NTP_PeerSet_Add(NULL, nps, argv[ch]);
+		npeer += NTP_PeerSet_Add(ocx, nps, argv[ch]);
 	if (npeer == 0)
-		Fail(NULL, 0, "No NTP peers found");
+		Fail(ocx, 0, "No NTP peers found");
 
-	Put(NULL, OCX_TRACE, "# NTIMED Format client 1.0\n");
-	Put(NULL, OCX_TRACE, "# Found %d peers\n", npeer);
+	Put(ocx, OCX_TRACE, "# NTIMED Format client 1.0\n");
+	Put(ocx, OCX_TRACE, "# Found %d peers\n", npeer);
 
-	Param_Report(NULL, OCX_TRACE);
+	Param_Report(ocx, OCX_TRACE);
 
-	usc = UdpTimedSocket(NULL);
+	usc = UdpTimedSocket(ocx);
 	if (usc == NULL)
-		Fail(NULL, errno, "Could not open UDP socket");
+		Fail(ocx, errno, "Could not open UDP socket");
 
 	cd = CD_New();
 
@@ -120,13 +120,13 @@ main_client(int argc, char *const *argv)
 
 	do {
 		if (restart) {
-			Debug(NULL, "RESTART\n");
+			Debug(ocx, "RESTART\n");
 			TB_generation++;
-			NTP_PeerSet_Poll(NULL, nps, usc, tdl);
+			NTP_PeerSet_Poll(ocx, nps, usc, tdl);
 			restart = 0;
 		}
 		(void)signal(SIGHUP, sig_hup);
-		(void)TODO_Run(NULL, tdl);
+		(void)TODO_Run(ocx, tdl);
 	} while (restart);
 
 	return (0);

@@ -102,7 +102,7 @@ putv(struct ocx *ocx, enum ocx_chan chan, const char *fmt, va_list ap)
  */
 
 void
-ArgTracefile(const char *fn)
+ArgTracefile(struct ocx *ocx, const char *fn)
 {
 
 	if (tracefile != NULL && tracefile != stdout) {
@@ -120,7 +120,7 @@ ArgTracefile(const char *fn)
 
 	tracefile = fopen(fn, "w");
 	if (tracefile == NULL)
-		Fail(NULL, 1, "Could not open '%s' for writing", fn);
+		Fail(ocx, 1, "Could not open '%s' for writing", fn);
 	setbuf(tracefile, NULL);
 }
 

@@ -44,7 +44,7 @@ dummy(void)
 }
 
 static int
-main_run_tests(int argc, char * const * argv)
+main_run_tests(struct ocx *ocx, int argc, char * const * argv)
 {
 
 	(void)argc;
@@ -52,7 +52,7 @@ main_run_tests(int argc, char * const * argv)
 
 	Time_Unix_Passive();
 
-	TS_RunTest(NULL);
+	TS_RunTest(ocx);
 
 	return (0);
 }
@@ -64,11 +64,11 @@ main(int argc, char * const *argv)
 		dummy();
 
 	if (argc > 1 && !strcmp(argv[1], "--poll-server"))
-		return (main_poll_server(argc - 1, argv + 1));
+		return (main_poll_server(NULL, argc - 1, argv + 1));
 	if (argc > 1 && !strcmp(argv[1], "--sim-client"))
-		return (main_sim_client(argc - 1, argv + 1));
+		return (main_sim_client(NULL, argc - 1, argv + 1));
 	if (argc > 1 && !strcmp(argv[1], "--run-tests"))
-		return (main_run_tests(argc - 1, argv + 1));
+		return (main_run_tests(NULL, argc - 1, argv + 1));
 
-	return (main_client(argc, argv));
+	return (main_client(NULL, argc, argv));
 }

@@ -214,12 +214,12 @@ SimFile_Open(struct ocx *ocx, const char *fn, struct todolist *tdl,
 			    "XXX: Wrong state (%d) in open_sim_file", s);
 		}
 	}
-	(void)simfile_readline(NULL, tdl, sf);
+	(void)simfile_readline(ocx, tdl, sf);
 	return (sf);
 }
 
 int
-main_sim_client(int argc, char *const *argv)
+main_sim_client(struct ocx *ocx, int argc, char *const *argv)
 {
 	int ch;
 	const char *s_filename = NULL;
@@ -238,7 +238,7 @@ main_sim_client(int argc, char *const *argv)
 
 	PLL_Init();
 
-	npl = NTP_PeerSet_New(NULL);
+	npl = NTP_PeerSet_New(ocx);
 
 	Param_Register(client_param_table);
 	NF_Init();
@@ -248,7 +248,7 @@ main_sim_client(int argc, char *const *argv)
 		case 'B':
 			ch = sscanf(optarg, "%lg,%lg,%lg", &a, &b, &c);
 			if (ch != 3)
-				Fail(NULL, 0,
+				Fail(ocx, 0,
 				    "bad -B argument \"when,freq,phase\"");
 			Time_Sim_Bump(tdl, a, b, c);
 			break;
@@ -256,13 +256,13 @@ main_sim_client(int argc, char *const *argv)
 			s_filename = optarg;
 			break;
 		case 'p':
-			Param_Tweak(NULL, optarg);
+			Param_Tweak(ocx, optarg);
 			break;
 		case 't':
-			ArgTracefile(optarg);
+			ArgTracefile(ocx, optarg);
 			break;
 		default:
-			Fail(NULL, 0,
+			Fail(ocx, 0,
 			    "Usage %s [-s simfile] [-p params] [-t tracefile]"
 			    " [-B when,freq,phase]", argv[0]);
 			break;
@@ -271,12 +271,12 @@ main_sim_client(int argc, char *const *argv)
 	// argc -= optind;
 	// argv += optind;
 
-	Param_Report(NULL, OCX_TRACE);
+	Param_Report(ocx, OCX_TRACE);
 
 	if (s_filename == NULL)
-		Fail(NULL, 1, "You must specify -s file.");
+		Fail(ocx, 1, "You must specify -s file.");
 
-	sf = SimFile_Open(NULL, s_filename, tdl, npl);
+	sf = SimFile_Open(ocx, s_filename, tdl, npl);
 	AN(sf);
 
 	cd = CD_New();
@@ -286,7 +286,7 @@ main_sim_client(int argc, char *const *argv)
 		np->combiner = CD_AddSource(cd, np->hostname, np->ip);
 	}
 
-	(void)TODO_Run(NULL, tdl);
+	(void)TODO_Run(ocx, tdl);
 
 	return (0);
 }

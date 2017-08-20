@@ -77,7 +77,7 @@ nf_filter(struct ocx *ocx, const struct ntp_peer *np)
 
 	NTP_Tool_Format(buf, sizeof buf, rxp);
 
-	Put(NULL, OCX_TRACE, "NTP_Packet %s %s %s\n",
+	Put(ocx, OCX_TRACE, "NTP_Packet %s %s %s\n",
 	    np->hostname, np->ip, buf);
 
 	if (rxp->ntp_leap == NTP_LEAP_UNKNOWN)

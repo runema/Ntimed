@@ -68,7 +68,7 @@ void Fail(struct ocx *, int err, const char *, ...) \
 /* ocx_stdio */
 void __match_proto__()
 putv(struct ocx *ocx, enum ocx_chan chan, const char *fmt, va_list ap);
-void ArgTracefile(const char *fn);
+void ArgTracefile(struct ocx *ocx, const char *fn);
 
 /* param.c -- Parameters **********************************************/
 
@@ -190,6 +190,6 @@ struct combiner *CD_AddSource(struct combine_delta *,
  * Main functions
  */
 
-int main_client(int argc, char *const *argv);
-int main_poll_server(int argc, char *const *argv);
-int main_sim_client(int argc, char *const *argv);
+int main_client(struct ocx *ocx, int argc, char *const *argv);
+int main_poll_server(struct ocx *ocx, int argc, char *const *argv);
+int main_sim_client(struct ocx *ocx, int argc, char *const *argv);
