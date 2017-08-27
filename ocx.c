@@ -26,7 +26,7 @@
  * Operational Context STDIO
  * =========================
  *
- * Theis contains the generic stuff. Se ocx_stdio.c for yhe details.
+ * Theis contains the generic stuff. Se ocx_stdio.c for the details.
  *
  */
 
